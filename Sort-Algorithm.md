@@ -706,7 +706,7 @@ class Quick extends Thread {
 }
 */
 1-3) 정렬 수행시간 코드 (힙 제외) - 역순으로 배열되어 있는 경우
-package Sort
+package Sort;
 
 import java.util.Scanner;
 import java.util.Arrays;
@@ -992,3 +992,19 @@ public class HeapSort {
 -  **버블정렬, 선택정렬, 삽입정렬 쉘정렬, 퀵 정렬** 까지 구현했으나 **퀵 정렬** 은 계속 **overflow** 오류가 발생하여 주석처리 했다. 
 - 힙 정렬 알고리즘의 수행시간을 코드로 구현하기가 생각보다 어려워 힙 정렬 코드 구현에 집중했고 관련된 자료를 찾아서 수행 시간에 대한 개념을 이해하는 방법을 택했다. 위의 힙 정렬 코드는 위의 힙 정렬 파트에서 DownHeap을 이용하여 오름차순으로 정리한 코드이다.
 
+> 버블 정렬, 선택 정렬, 삽입 정렬, 쉘 정렬의 알고리즘 수행 시간을 직접 측정해보았고, 이를 바탕으로 그래프로 나타내보았다.
+
+1) 버블 정렬<br/>
+
+<img width="900" alt="버블 정렬 구현" src="https://user-images.githubusercontent.com/68879690/166951761-f61aa70b-9bbe-4a79-930d-e45a68d069c7.PNG">
+
+2) 삽입 정렬 <br/>
+
+<img width="900" alt="삽입 정렬" src="https://user-images.githubusercontent.com/68879690/166951941-ea62e37f-b473-4572-95b8-b31fbb78b6a4.PNG">
+
+3) 선택 정렬 <br/>
+
+<img width="900" alt="선택 정렬" src="https://user-images.githubusercontent.com/68879690/166952042-792c124c-9dee-41d5-aa33-6cc614cf5a07.PNG">
+
+4) 쉘 정렬 <br/>
+<img width="900" alt="쉘 정렬" src="https://user-images.githubusercontent.com/68879690/166952129-2e17dc8b-1bc9-44d3-b4d7-a1dfa1e30503.PNG">
