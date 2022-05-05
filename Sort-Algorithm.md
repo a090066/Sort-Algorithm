@@ -29,7 +29,14 @@
 
 ### ▼ 성능 분석
 - 보통 성능 분석은 해당 알고리즘이 수행되는데 걸리는 소요 시간인, 시간복잡도로 판별한다. (공간복잡도도 있지만 이번 글에선 시간 복잡도로만 알고리즘의 성능분석 관련 내용을 다뤄보려 한다.)
-- 
+- 버블 정렬은 정말 버블처럼 인접한 수를 하나하나 비교해가면서 수를 정렬하므로, 모든 수를 교환할 수도 있다.
+- 심지어, 수를 정렬하는 과정에서 제 자리에 찾아간 수도 버블 정렬 과정 때문에 옮겨질 수도 있다.
+- 구현만 쉬울 뿐, 매우 비효율적인 알고리즘이라 잘 사용하지 않는다.
+- 최상의 경우, 평균의 경우, 최악의 경우를 따져봤을 때 모두 같은 소요 시간이 걸리므로 시간 복잡도는 다음과 같다.
+> 비교 횟수 : n-1, n-2, n-3, ∙∙∙, 2, 1 = n(n-1) / 2
+> 교환 횟수 > 최악의 상황에서 교환하는데 최소 3번의 이동이 필요하므로 : 3(n-1) / 2 이다. 정렬이 필요없는 최선의 상황에서는 교환이 일어나지 않는다.
+- <버블 정렬 시간복잡도> <br/>
+최선, 평균, 최악 모두 *O(n<sup>2</sup>)* 로 동일함.
 
 ___
 ## 선택 정렬(Selection Sort)
@@ -66,7 +73,8 @@ step 5
 선택정렬 완료
 ```
 ### ▼ 성능 분석
-
+- <선택 정렬 시간복잡도> <br/>
+최선, 평균, 최악 모두 *O(n<sup>2</sup>)* 로 동일함.
 ___
 ## 삽입 정렬(Insertion Sort)
 - 여러 숫자 입력된 배열에서, 정렬 되지 않은 부분과 정렬된 부분을 나눠서 정렬을 진행한다.
@@ -123,7 +131,8 @@ key값을 5로 설정하고, 왼쪽으로 이동하면서 5보다 큰 수가 나
 삽입 정렬 완료
 ```
 ### ▼ 성능 분석
-
+- <버블 정렬 시간복잡도> <br/>
+최선, 평균, 최악 모두 *O(n<sup>2</sup>)* 로 동일함.
 ___
 ## 쉘 정렬(Shell Sort)
 - 쉘 정렬은 버블 정렬이나 삽입 정렬의 단점을 보완하기 위해 고안되었고 삽입정렬을 일부 사용하는 정렬 알고리즘이다.
@@ -186,6 +195,9 @@ Group2 |   1   5   10   13   21
 1 3 5 7 8 10 11 13 17 19 21
 ```
 ### ▼ 성능 분석
+- <쉘 정렬 시간복잡도> <br/>
+최선, 평균, 최악 모두 *O(n<sup>1.25</sup>)* 로 동일함. 하지만 상황에 따라 최선은 *O(n)*, 평균은 *O(n<sup>1.5</sup>)*, 최악의 경우는 *O(n<sup>2</sup>)* 인 경우도 있다.
+<br/>
 
 ___
 ## 힙 정렬(Heap Sort) - Priority Queue
@@ -222,6 +234,9 @@ Min heap을 통해 오름차순으로 나타내면 다음과 같이 정렬된다
 
 > 10 20 30 40 50 60 70 80 100
 ```
+### ▼ 성능 분석
+- <힙 정렬 시간복잡도>
+최선, 평균, 최악 모두 *O(nlogn)* 로 동일함.<br/>
 ___
 ## 퀵 정렬(Quick Sort)
 - 이름에서 알 수 있듯이 가장 빠른 속도를 자랑하는 퀵 정렬이다.
@@ -252,8 +267,231 @@ pivot을 기준으로 왼쪽엔 8보다 작은 수, 오른 쪽엔 8보다 큰 �
 ※ Low와 High가 엇갈리면 순환을 멈추고, pivot값과 high값을 바꿔준다!
 ```
 ### ▼ 성능 분석
-
+- <퀵 정렬 시간복잡도> <br/>
+최선, 평균 : *O(nlogn)* <br/>
+최악 : *O(n^2)*
 ___
+
+### 코드 구현(정렬 수행 시간)
+```java
+package Sort;
+
+import java.util.Scanner;
+
+public class SortTest extends Thread {
+    public static void main(String[] args) {
+        System.out.print("배열크기를 정해주세요 : ");
+        Scanner sc = new Scanner(System.in);
+        int snum = sc.nextInt();
+ 
+        int[] num = new int[snum];
+ 
+        System.out.println("난수배열 생성시작");
+        for (int i = 0; i < snum; i++) {
+            num[i] = (int) (Math.random() * snum);
+
+        }
+        System.out.println("난수배열 생성완료");
+        System.out.println();
+ 
+        Bubble bubble = new Bubble(num);
+        Selection selection = new Selection(num);
+        Insertion insertion = new Insertion(num);
+        Shell shell = new Shell(num);
+        // Quick quick = new Quick(num);
+         
+        bubble.start(); 
+        selection.start(); 
+        insertion.start(); 
+        shell.start();
+        // quick.start();
+    }
+    /*
+    public static void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public static void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	else if(pl < right)
+    		quickSort(a, pl, right);
+    }
+ */
+}
+ 
+class Bubble extends Thread {
+    int[] a;
+    int b;
+ 
+    Bubble(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("버블정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - i - 1; j++) {
+                if (a[j] > a[j + 1]) {
+                    b = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("버블정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Selection extends Thread {
+    int[] a;
+    int b;
+ 
+    Selection(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("선택정렬 시작!");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i] > a[j]) {
+                    b = a[j];
+                    a[j] = a[i];
+                    a[i] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("선택정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Insertion extends Thread {
+    int[] a;
+    int b, j;
+ 
+    Insertion(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("삽입정렬 시작!");
+        long start = System.currentTimeMillis();
+        for (int i = 1; i < a.length; i++) {
+            b = a[i];
+            for (j = i - 1; j >= 0 && a[j] > b; j--) {
+                a[j + 1] = a[j];
+            }
+            a[j + 1] = b;
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("삽입정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+
+class Shell extends Thread {
+	int[] a;
+	int b;
+	
+	Shell(int[] array) {
+		a = array;
+	}
+	
+	public void run() {
+		System.out.println("쉘 정렬 시작");
+		long start = System.currentTimeMillis();
+		for(int h  = a.length/2; h > 0; h /= 2) {
+			for(int i = h; i < a.length; i++) {
+				int j;
+				int b = a[i];
+				
+				for(j = i - h; j >= 0 && a[j] > b; j -= h) {
+					a[j + h] = a[j];
+				}
+				a[j + h] = b;
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("쉘 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+
+/*
+class Quick extends Thread {
+	int[] a;
+
+	Quick(int[] array) {
+		a = array;
+	}
+	public void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	
+    	if(pl < right)
+    		quickSort(a, pl, right);
+    }
+	
+	public void run() {
+		System.out.println("퀵 정렬 시작");
+		long start = System.currentTimeMillis();
+		quickSort(a, 0, a.length - 1);
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("퀵 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+*/
+```
+-  **버블정렬, 선택정렬, 삽입정렬 쉘정렬, 퀵 정렬** 까지 구현했으나 **퀵 정렬** 은 계속 **overflow** 오류가 발생하여 주석처리 했다. 
+- 힙 정렬은 구현하기가 생각보다 어려워 코드 구현에 집중했고 관련된 자료를 찾아서 수행 시간에 대한 개념을 이해하는 방법을 택했다.
+
+
 
 
 
