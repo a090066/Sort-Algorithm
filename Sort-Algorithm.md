@@ -275,23 +275,466 @@ ___
 ### 코드 구현(정렬 수행 시간)
 ```java
 1-1) 정렬 수행시간 코드 (힙 제외) - 정렬되어 있는 경우
-package Sort;
+package Sort
+
 import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class SortTest extends Thread {
     public static void main(String[] args) {
-        System.out.print("input 크기 입력 : ");
+        System.out.print("배열크기를 입력 : ");
         Scanner sc = new Scanner(System.in);
         int snum = sc.nextInt();
  
         int[] num = new int[snum];
  
-        System.out.println("배열 생성 시작!");
+        System.out.println("랜덤배열 생성시작");
         for (int i = 0; i < snum; i++) {
-            // num[i] = (int) (Math.random() * snum);
-            // 랜덤 배열이 아닌 정상적으로 배열된 상황이므로 이 부분을 지워준다.
+            num[i] = (int) (Math.random() * snum);
         }
-        System.out.println("배열 생성완료");
+        Arrays.sort(num);
+        
+        System.out.println("정방향 배열(오름차순) 생성완료");
+        System.out.println();
+ 
+        Bubble bubble = new Bubble(num);
+        Selection selection = new Selection(num);
+        Insertion insertion = new Insertion(num);
+        Shell shell = new Shell(num);
+        // Quick quick = new Quick(num);
+         
+        bubble.start(); 
+        selection.start(); 
+        insertion.start(); 
+        shell.start();
+        // quick.start();
+    }
+    /*
+    public static void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public static void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	else if(pl < right)
+    		quickSort(a, pl, right);
+    }
+ */
+}
+ 
+class Bubble extends Thread {
+    int[] a;
+    int b;
+ 
+    Bubble(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("버블정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - i - 1; j++) {
+                if (a[j] > a[j + 1]) {
+                    b = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("버블정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Selection extends Thread {
+    int[] a;
+    int b;
+ 
+    Selection(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("선택정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i] > a[j]) {
+                    b = a[j];
+                    a[j] = a[i];
+                    a[i] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("선택정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Insertion extends Thread {
+    int[] a;
+    int b, j;
+ 
+    Insertion(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("삽입 정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 1; i < a.length; i++) {
+            b = a[i];
+            for (j = i - 1; j >= 0 && a[j] > b; j--) {
+                a[j + 1] = a[j];
+            }
+            a[j + 1] = b;
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("삽입정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+
+class Shell extends Thread {
+	int[] a;
+	int b;
+	
+	Shell(int[] array) {
+		a = array;
+	}
+	
+	public void run() {
+		System.out.println("쉘정렬 시작");
+		long start = System.currentTimeMillis();
+		for(int h  = a.length/2; h > 0; h /= 2) {
+			for(int i = h; i < a.length; i++) {
+				int j;
+				int b = a[i];
+				
+				for(j = i - h; j >= 0 && a[j] > b; j -= h) {
+					a[j + h] = a[j];
+				}
+				a[j + h] = b;
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("쉘정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+
+/*
+class Quick extends Thread {
+	int[] a;
+
+	Quick(int[] array) {
+		a = array;
+	}
+	public void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	
+    	if(pl < right)
+    		quickSort(a, pl, right);
+    }
+	
+	public void run() {
+		System.out.println("퀵정렬 시작");
+		long start = System.currentTimeMillis();
+		quickSort(a, 0, a.length - 1);
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("퀵정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+*/
+
+
+1-2) 정렬 수행시간 코드 (힙 제외) - 랜덤 배열
+package Sort;
+import java.util.Scanner;
+
+public class SortTest extends Thread {
+    public static void main(String[] args) {
+        System.out.print("배열크기를 입력 : ");
+        Scanner sc = new Scanner(System.in);
+        int snum = sc.nextInt();
+ 
+        int[] num = new int[snum];
+ 
+        System.out.println("랜덤배열 생성시작");
+        for (int i = 0; i < snum; i++) {
+            num[i] = (int) (Math.random() * snum);
+        }
+        System.out.println("랜덤배열 생성완료");
+        System.out.println();
+ 
+        Bubble bubble = new Bubble(num);
+        Selection selection = new Selection(num);
+        Insertion insertion = new Insertion(num);
+        Shell shell = new Shell(num);
+        // Quick quick = new Quick(num);
+         
+        bubble.start(); 
+        selection.start(); 
+        insertion.start(); 
+        shell.start();
+        // quick.start();
+    }
+    /*
+    public static void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public static void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	else if(pl < right)
+    		quickSort(a, pl, right);
+    }
+ */
+}
+ 
+class Bubble extends Thread {
+    int[] a;
+    int b;
+ 
+    Bubble(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("버블정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a.length - i - 1; j++) {
+                if (a[j] > a[j + 1]) {
+                    b = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("버블정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Selection extends Thread {
+    int[] a;
+    int b;
+ 
+    Selection(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("선택정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i] > a[j]) {
+                    b = a[j];
+                    a[j] = a[i];
+                    a[i] = b;
+                }
+            }
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("선택정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+ 
+class Insertion extends Thread {
+    int[] a;
+    int b, j;
+ 
+    Insertion(int[] array) {
+        a = array;
+    }
+ 
+    public void run() {
+        System.out.println("삽입정렬 시작");
+        long start = System.currentTimeMillis();
+        for (int i = 1; i < a.length; i++) {
+            b = a[i];
+            for (j = i - 1; j >= 0 && a[j] > b; j--) {
+                a[j + 1] = a[j];
+            }
+            a[j + 1] = b;
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("삽입정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+    }
+}
+
+class Shell extends Thread {
+	int[] a;
+	int b;
+	
+	Shell(int[] array) {
+		a = array;
+	}
+	
+	public void run() {
+		System.out.println("쉘 정렬 시작");
+		long start = System.currentTimeMillis();
+		for(int h  = a.length/2; h > 0; h /= 2) {
+			for(int i = h; i < a.length; i++) {
+				int j;
+				int b = a[i];
+				
+				for(j = i - h; j >= 0 && a[j] > b; j -= h) {
+					a[j + h] = a[j];
+				}
+				a[j + h] = b;
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		System.out.println("쉘 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+
+/*
+class Quick extends Thread {
+	int[] a;
+
+	Quick(int[] array) {
+		a = array;
+	}
+	public void swap(int[] a, int pl, int pr) {
+    	int b = a[pl];
+    	a[pl] = a[pr];
+    	a[pr] = b;
+    }
+    
+    public void quickSort(int[] a, int left, int right) {
+    	int pl = left;
+    	int pr = right;
+    	int pivot = a[ (a[left] + a[right]) / 2];
+    	
+    	do {
+    		while(a[pl] < pivot)
+    			pl++;
+    		while(a[pr]>pivot)
+    			pr--;
+    		if(pl <= pr) {
+    			swap(a, pl, pr);
+    			pl++;
+    			pr--;
+    		}
+    	} while(pl <= pr);
+    	
+    	if(left < pr)
+    		quickSort(a, left, pr);
+    	
+    	if(pl < right)
+    		quickSort(a, pl, right);
+    }
+	
+	public void run() {
+		System.out.println("퀵 정렬 시작");
+		long start = System.currentTimeMillis();
+		quickSort(a, 0, a.length - 1);
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println("퀵 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
+	}
+}
+*/
+1-3) 정렬 수행시간 코드 (힙 제외) - 역순으로 배열되어 있는 경우
+package Sort
+
+import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class SortTest extends Thread {
+    public static void main(String[] args) {
+        System.out.print("배열크기를 정해주세요 : ");
+        Scanner sc = new Scanner(System.in);
+        int snum = sc.nextInt();
+        int[] num = new int[snum];
+        
+        System.out.println("랜덤배열 생성시작");
+        for (int i = 0; i < snum; i++) {
+            num[i] = (int) (Math.random() * snum);
+        }
+        int temp;
+        for(int i = 0; i < num.length - 1; i++) {
+        	for(int j = i + 1; j < num.length; j++) {
+        		if(num[i] < num[j]) {
+        			temp = num[i];
+        			num[i] = num[j];
+        			num[j] = num[i];
+        		}
+        	}
+        }
+        
+        System.out.println("역방향 배열(내림차순) 생성완료");
         System.out.println();
  
         Bubble bubble = new Bubble(num);
@@ -398,7 +841,7 @@ class Insertion extends Thread {
     }
  
     public void run() {
-        System.out.println("삽입정렬 시작!");
+        System.out.println("삽입 정렬 시작");
         long start = System.currentTimeMillis();
         for (int i = 1; i < a.length; i++) {
             b = a[i];
@@ -487,224 +930,6 @@ class Quick extends Thread {
 	}
 }
 */
-
-
-
-1-2) 정렬 수행시간 코드 (힙 제외) - 랜덤 배열
-package Sort;
-import java.util.Scanner;
-
-public class SortTest extends Thread {
-    public static void main(String[] args) {
-        System.out.print("배열크기를 정해주세요 : ");
-        Scanner sc = new Scanner(System.in);
-        int snum = sc.nextInt();
- 
-        int[] num = new int[snum];
- 
-        System.out.println("랜덤배열 생성시작");
-        for (int i = 0; i < snum; i++) {
-            num[i] = (int) (Math.random() * snum);
-
-        }
-        System.out.println("랜덤배열 생성완료");
-        System.out.println();
- 
-        Bubble bubble = new Bubble(num);
-        Selection selection = new Selection(num);
-        Insertion insertion = new Insertion(num);
-        Shell shell = new Shell(num);
-        // Quick quick = new Quick(num);
-         
-        bubble.start(); 
-        selection.start(); 
-        insertion.start(); 
-        shell.start();
-        // quick.start();
-    }
-    /*
-    public static void swap(int[] a, int pl, int pr) {
-    	int b = a[pl];
-    	a[pl] = a[pr];
-    	a[pr] = b;
-    }
-    
-    public static void quickSort(int[] a, int left, int right) {
-    	int pl = left;
-    	int pr = right;
-    	int pivot = a[ (a[left] + a[right]) / 2];
-    	
-    	do {
-    		while(a[pl] < pivot)
-    			pl++;
-    		while(a[pr]>pivot)
-    			pr--;
-    		if(pl <= pr) {
-    			swap(a, pl, pr);
-    			pl++;
-    			pr--;
-    		}
-    	} while(pl <= pr);
-    	if(left < pr)
-    		quickSort(a, left, pr);
-    	else if(pl < right)
-    		quickSort(a, pl, right);
-    }
- */
-}
- 
-class Bubble extends Thread {
-    int[] a;
-    int b;
- 
-    Bubble(int[] array) {
-        a = array;
-    }
- 
-    public void run() {
-        System.out.println("버블정렬 시작");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a.length - i - 1; j++) {
-                if (a[j] > a[j + 1]) {
-                    b = a[j];
-                    a[j] = a[j + 1];
-                    a[j + 1] = b;
-                }
-            }
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("버블정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
-    }
-}
- 
-class Selection extends Thread {
-    int[] a;
-    int b;
- 
-    Selection(int[] array) {
-        a = array;
-    }
- 
-    public void run() {
-        System.out.println("선택정렬 시작!");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < a.length - 1; i++) {
-            for (int j = i + 1; j < a.length; j++) {
-                if (a[i] > a[j]) {
-                    b = a[j];
-                    a[j] = a[i];
-                    a[i] = b;
-                }
-            }
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("선택정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
-    }
-}
- 
-class Insertion extends Thread {
-    int[] a;
-    int b, j;
- 
-    Insertion(int[] array) {
-        a = array;
-    }
- 
-    public void run() {
-        System.out.println("삽입정렬 시작!");
-        long start = System.currentTimeMillis();
-        for (int i = 1; i < a.length; i++) {
-            b = a[i];
-            for (j = i - 1; j >= 0 && a[j] > b; j--) {
-                a[j + 1] = a[j];
-            }
-            a[j + 1] = b;
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("삽입정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
-    }
-}
-
-class Shell extends Thread {
-	int[] a;
-	int b;
-	
-	Shell(int[] array) {
-		a = array;
-	}
-	
-	public void run() {
-		System.out.println("쉘 정렬 시작");
-		long start = System.currentTimeMillis();
-		for(int h  = a.length/2; h > 0; h /= 2) {
-			for(int i = h; i < a.length; i++) {
-				int j;
-				int b = a[i];
-				
-				for(j = i - h; j >= 0 && a[j] > b; j -= h) {
-					a[j + h] = a[j];
-				}
-				a[j + h] = b;
-			}
-		}
-		long endTime = System.currentTimeMillis();
-		System.out.println("쉘 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
-	}
-}
-
-/*
-class Quick extends Thread {
-	int[] a;
-
-	Quick(int[] array) {
-		a = array;
-	}
-	public void swap(int[] a, int pl, int pr) {
-    	int b = a[pl];
-    	a[pl] = a[pr];
-    	a[pr] = b;
-    }
-    
-    public void quickSort(int[] a, int left, int right) {
-    	int pl = left;
-    	int pr = right;
-    	int pivot = a[ (a[left] + a[right]) / 2];
-    	
-    	do {
-    		while(a[pl] < pivot)
-    			pl++;
-    		while(a[pr]>pivot)
-    			pr--;
-    		if(pl <= pr) {
-    			swap(a, pl, pr);
-    			pl++;
-    			pr--;
-    		}
-    	} while(pl <= pr);
-    	
-    	if(left < pr)
-    		quickSort(a, left, pr);
-    	
-    	if(pl < right)
-    		quickSort(a, pl, right);
-    }
-	
-	public void run() {
-		System.out.println("퀵 정렬 시작");
-		long start = System.currentTimeMillis();
-		quickSort(a, 0, a.length - 1);
-		
-		long endTime = System.currentTimeMillis();
-		System.out.println("퀵 정렬 끝. 수행시간 : " + (endTime - start) / 1000.0f + "초");
-	}
-}
-*/
-1-3) 정렬 수행시간 코드 (힙 제외) - 역순으로 배열되어 있는 경우
-
 
 
 2) 힙 정렬 코드 구현
